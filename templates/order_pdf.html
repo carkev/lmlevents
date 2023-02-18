@@ -1,27 +1,27 @@
 <html>
 <body>
-  <h1>My Shop</h1>
+  <h1>LML Events</h1>
   <p>
-    Invoice no. {{ order.id }}<br>
+    Facture n°. {{ order.id }}<br>
     <span class="secondary">
       {{ order.created|date:"M d, Y" }}
     </span>
   </p>
-  <h3>Bill to</h3>
+  <h3>Facturé à</h3>
   <p>
     {{ order.first_name }} {{ order.last_name }}<br>
     {{ order.email }}<br>
     {{ order.address }}<br>
     {{ order.postal_code }}, {{ order.city }}
   </p>
-  <h3>Items bought</h3>
+  <h3>Articles achetés</h3>
   <table>
     <thead>
       <tr>
-        <th>Product</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Cost</th>
+        <th>Produit</th>
+        <th>Prix</th>
+        <th>Quantité</th>
+        <th>Coût</th>
       </tr>
     </thead>
     <tbody>
@@ -41,7 +41,7 @@
   </table>
 
   <span class="{% if order.paid %}paid{% else %}pending{% endif %}">
-    {% if order.paid %}Paid{% else %}Pending payment{% endif %}
+    {% if order.paid %}Payé{% else %}Paiement en attente{% endif %}
   </span>
 </body>
 </html>

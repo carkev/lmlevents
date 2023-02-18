@@ -44,27 +44,40 @@ if DEBUG:
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[:-1] + "1" for ip in ips]
 
-# Application definition
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    # 3rd party
-    'debug_toolbar',
-    'taggit',
-    'django.contrib.sites',
-    'django.contrib.sitemaps',
-    'django.contrib.postgres',
-    # Local
+LOCALS = [
     'utils',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
     'payment.apps.PaymentConfig',
     'shop.apps.ShopConfig',
 ]
+
+TESTS = [
+    'debug_toolbar',
+]
+
+THIRD_PART = [
+    'taggit',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
+    'django.contrib.postgres',
+    'django_celery_results',
+]
+
+DJANGO_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+
+# Application definition
+INSTALLED_APPS = DJANGO_APPS + THIRD_PART + LOCALS
+
+if DEBUG:
+    INSTALLED_APPS += TESTS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -167,7 +180,11 @@ EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
 STRIPE_PUBLISHABLE_KEY = env('STRIPE_PUB')  # Publishable key
 STRIPE_SECRET_KEY = env('STRIPE_KEY')  # Secret key
 STRIPE_API_VERSION = env('STRIPE_VERSION')
-STRIPE_WEBHOOK_SECRET = ''  # env('STRIPE_WEBHOOK')
+STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK')
+
+# Celery
+CELERY_BROKER_URL = 'amqp://admin:admin@broker:5672//'
+CELERY_RESULT_BACKEND = 'django-db'
 
 # Logs
 # LOGGING = {

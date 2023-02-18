@@ -11,7 +11,6 @@ def order_created(order_id):
     successfully created.
     """
     order = Order.objects.get(id=order_id)
-    print("order", order.email)
     subject = f'Commande n°. {order.id}'
     message = f'Bonjour {order.first_name},\n\n' \
               f'Votre commande a été réalisée avec succès.' \
