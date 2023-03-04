@@ -1,3 +1,11 @@
+# docker-compose up -d --scale worker=1 --build
+# stripe listen --forward-to localhost:8000/payment/webhook/
+#
+# Resullt                           | Test credit card    | CVC          | Expiracy date
+# -----------------------------------------------------------------------------------------
+# Successful payment                | 4242 4242 4242 4242 | Any 3 digits | Any future date
+# Failed payment                    | 4000 0000 0000 0002 | Any 3 digits | Any future date
+# Requires 3D secure authentication | 4000 0025 0000 3155 | Any 3 digits | Any future date
 version: '3.9'
 
 services:
@@ -14,11 +22,7 @@ services:
       - "POSTGRES_DB=vr_shop"
 
   broker:
-    # docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:management
-    build:
-      context: .
-      dockerfile: rabbit-dockerfile
-    container_name: broker
+    image: rabbitmq:3-management
     restart: always
     environment:
       - RABBITMQ_DEFAULT_USER=admin
@@ -26,71 +30,59 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq/mnesia/
     ports:
-      # Expose the port for the worker to add/get tasks
       - 5672:5672
-      # OPTIONAL: Expose the GUI port
       - 15672:15672
     depends_on:
       - db
-      # - redis
   
-  # redis:
-  #   image: redis:latest
-  #   container_name: redis
-  #   restart: always
-  #   ports:
-  #     - 6379:6379
-  #   volumes:
-  #     - redis_data:/data
-  #   depends_on:
-  #     - db
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
 
   flower:
     image: zoomeranalytics/flower:0.9.1-4.0.2
     restart: "no"
-    environment:
-      - FLOWER_BROKER=amqp://admin:admin@broker:5672
-    command: bash -c "celery flower --port=5555 --broker=http://admin:admin@localhost:15672/"
+    command: bash -c "celery flower --port=5555 --broker=amqp://admin:admin@broker:5672/"
     ports:
       - "5555:5555"
     depends_on:
       - broker
-
-  worker:
-    image: backend-image
-    restart: on-failure
-    command: bash -c "celery -A config worker -l info -s /tmp/celerybeat-schedule"
-    depends_on:
       - web
-      - broker
-      - db
 
-  web:
-    # celery -A config worker -l info
-    # celery -A config flower
-    # stripe listen --forward-to localhost:8000/payment/webhook/
-    #
-    # Resullt                           | Test credit card    | CVC          | Expiracy date
-    # -----------------------------------------------------------------------------------------
-    # Successful payment                | 4242 4242 4242 4242 | Any 3 digits | Any future date
-    # Failed payment                    | 4000 0000 0000 0002 | Any 3 digits | Any future date
-    # Requires 3D secure authentication | 4000 0025 0000 3155 | Any 3 digits | Any future date
+  web: &web
     build: .
     image: backend-image
     container_name: vr_web
     ports:
       - "8000:8000"
-    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python manage.py runserver 0.0.0.0:8000 && celery -A config flower"
+    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
     depends_on:
       - db
       - broker
-      # - redis
+      - redis
     environment:
     - "DJANGO_KEY_FILE: '/run/secrets/django-secrets'"
     secrets:
       - django-secrets
+  
+  worker:
+    <<: *web
+    restart: on-failure
+    container_name: worker
+    environment:
+      - CELERY_BROKER=amqp://admin:admin@broker:5672//
+    command: celery -A config worker -l info
+    ports: []
+    depends_on:
+      - broker
+      - db
 
 volumes:
   postgres_data:

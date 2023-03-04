@@ -10,10 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+import logging
 from io import TextIOWrapper
 import socket
 from pathlib import Path
 from environs import Env
+
+# Logger
+logger = logging.getLogger(__file__)
 
 # Environment settings
 env = Env()
@@ -32,12 +36,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("DJANGO_KEY")
-# SECRET_KEY = 'django-insecure-58#$=o+29i5f1%y!d8a)affmjy(obt4kl$k5hp)#13ta(x2rp&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
 DEBUG = env.bool('DJANGO_DEBUG')
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["*"]
 
 if DEBUG:
     # Django-debug-toolbar params
@@ -50,6 +52,7 @@ LOCALS = [
     'orders.apps.OrdersConfig',
     'payment.apps.PaymentConfig',
     'shop.apps.ShopConfig',
+    'coupons.apps.CouponsConfig',
 ]
 
 TESTS = [
@@ -62,6 +65,10 @@ THIRD_PART = [
     'django.contrib.sitemaps',
     'django.contrib.postgres',
     'django_celery_results',
+    # 'cookie_consent',
+    "django_bootstrap5",
+    'fontawesomefree',
+    'crispy_forms',
 ]
 
 DJANGO_APPS = [
@@ -87,8 +94,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE += [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    ]
 
 ROOT_URLCONF = 'config.urls'
 
@@ -110,16 +121,28 @@ TEMPLATES = [
     },
 ]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+ASGI_APPLICATION = 'config.asgi.application'
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 DATABASES = {
-    'default': env.dj_db_url('DJANGO_DB', default=env.dj_db_url('DJANGO_DB_DEFAULT'))
+    'default': env.dj_db_url('DJANGO_DB',
+                             default=env.dj_db_url('DJANGO_DB_DEFAULT')),
 }
-# REDIS_HOST = env('REDIS_HOST')
-# REDIS_PORT = env('REDIS_PORT')
-# REDIS_DB = env('REDIS_DB')
+
+REDIS_HOST = env('REDIS_HOST')
+REDIS_PORT = env('REDIS_PORT')
+REDIS_DB = env('REDIS_DB')
+
+# Cache
+# CACHES = {
+#     'default': {
+#         # 'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+#         'LOCATION': env.cache('REDIS_LOCATION'),
+#     }
+# }
 
 # SESSION
 SITE_ID = 1
@@ -129,16 +152,20 @@ CART_SESSION_ID = 'cart'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation'
+        '.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation'
+        '.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation'
+        '.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation'
+        '.NumericPasswordValidator',
     },
 ]
 
@@ -155,6 +182,10 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 # Media storage
 MEDIA_URL = "/media/"
@@ -168,40 +199,52 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = env.int('EMAIL_PORT')
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
 
-# Cache
-# CACHES = {
-#     'default': {
-#         # 'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-#         'LOCATION': env.cache('REDIS_LOCATION'),
-#     }
-# }
-
 # Stripe settings
-STRIPE_PUBLISHABLE_KEY = env('STRIPE_PUB')  # Publishable key
-STRIPE_SECRET_KEY = env('STRIPE_KEY')  # Secret key
-STRIPE_API_VERSION = env('STRIPE_VERSION')
-STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK')
+STRIPE_PUBLISHABLE_KEY = env('STRIPE_PUB')     # Stripe's publishable key
+STRIPE_SECRET_KEY = env('STRIPE_KEY')          # Stripe's secret key
+STRIPE_API_VERSION = env('STRIPE_VERSION')     # Stripe version
+STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK')  # Stripe's webhook key
 
-# Celery
-CELERY_BROKER_URL = 'amqp://admin:admin@broker:5672//'
-CELERY_RESULT_BACKEND = 'django-db'
+# RabbitMQ
+CELERY_BROKER_URL = env('BROKER_URL')
+# CELERY_RESULT_BACKEND = env('BROKER_BACKEND')  # URL of the broker DB
 
 # Logs
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler'
-#         },
-#     },
-#     'loggers': {
-#         '': {  # 'catch all' loggers by referencing it with the empty string
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#         },
-#     },
-# }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'root': {
+        'level': 'INFO',
+        'handlers': ['file']
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler'
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/django.log',
+            'formatter': 'app',
+        },
+    },
+    'loggers': {
+        'django': {
+            # 'catch all' loggers by referencing it with the empty string
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+        },
+    },
+    'formatters': {
+        'app': {
+            'format': (
+                '%(asctime)s [%(levelname)-8s] '
+                '(%(module)s.%(funcName)s) %(message)s'
+            ),
+            'datefmt': '%d-%m-%Y %H:%M:%S',
+        },
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

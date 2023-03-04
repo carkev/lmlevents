@@ -26,7 +26,7 @@ def payment_completed(order_id):
     out = BytesIO()
     stylesheets=[weasyprint.CSS(settings.STATIC_ROOT / 'css/pdf.css')]
     weasyprint.HTML(string=html).write_pdf(out,
-                                          stylesheets=stylesheets)
+                                           stylesheets=stylesheets)
     # attach PDF file
     email.attach(f'order_{order.id}.pdf',
                  out.getvalue(),

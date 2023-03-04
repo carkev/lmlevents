@@ -29,12 +29,13 @@ def payment_process(request):
             'cancel_url': cancel_url,
             'line_items': []
         }
+
         # add order items to the Stripe checkout session
         for item in order.items.all():
             session_data['line_items'].append({
                 'price_data': {
                     'unit_amount': int(item.price * Decimal('100')),
-                    'currency': 'usd',
+                    'currency': 'eur',
                     'product_data': {
                         'name': item.product.name,
                     },
@@ -42,14 +43,23 @@ def payment_process(request):
                 'quantity': item.quantity,
             })
 
+        # Stripe coupon
+        if order.coupon:
+            stripe_coupon = stripe.Coupon.create(
+                                name=order.coupon.code,
+                                percent_off=order.discount,
+                                duration='once')
+            session_data['discounts'] = [{
+                'coupon': stripe_coupon.id
+            }]
+
         # create Stripe checkout session
         session = stripe.checkout.Session.create(**session_data)
 
         # redirect to Stripe payment form
         return redirect(session.url, code=303)
 
-    else:
-        return render(request, 'payment_process.html', locals())
+    return render(request, 'payment_process.html', locals())
 
 
 def payment_completed(request):
