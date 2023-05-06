@@ -53,10 +53,12 @@ LOCALS = [
     'payment.apps.PaymentConfig',
     'shop.apps.ShopConfig',
     'coupons.apps.CouponsConfig',
+    'users.apps.UsersConfig',
 ]
 
 TESTS = [
     'debug_toolbar',
+    'django_extensions',
 ]
 
 THIRD_PART = [
@@ -132,21 +134,36 @@ DATABASES = {
                              default=env.dj_db_url('DJANGO_DB_DEFAULT')),
 }
 
+# Auto generate UML and database.
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
+
 REDIS_HOST = env('REDIS_HOST')
 REDIS_PORT = env('REDIS_PORT')
 REDIS_DB = env('REDIS_DB')
+# APPEND_SLASH = False
 
-# Cache
-# CACHES = {
-#     'default': {
-#         # 'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-#         'LOCATION': env.cache('REDIS_LOCATION'),
-#     }
-# }
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "lml_events"
+    }
+}
+
+# Cache time to live is 15 minutes.
+CACHE_TTL = 60 * 15
 
 # SESSION
 SITE_ID = 1
 CART_SESSION_ID = 'cart'
+
+# COOKIES
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -168,6 +185,18 @@ AUTH_PASSWORD_VALIDATORS = [
         '.NumericPasswordValidator',
     },
 ]
+
+# REDIRECT
+LOGIN_URL = 'users:sign-in'
+LOGIN_REDIRECT_URL = 'shop:shop'
+LOGOUT_REDIRECT_URL = 'users:sign-in'
+
+# Twilio
+TWILIO_SID = env('TWILIO_SID')
+TWILIO_TOKEN = env('TWILIO_TOKEN')
+TWILIIO_TEL = env('TWILIIO_TEL')
+TWILIO_VERIFY = env('TWILIO_VERIFY')
+IND = "+33"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -198,6 +227,9 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = env.int('EMAIL_PORT')
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
+DISPLAY_NAME = "LML Events verification mail"
+DONOT_REPLY_EMAIL_PASSWORD = ""
+CURRENT_SITE = "http://localhost:8000"
 
 # Stripe settings
 STRIPE_PUBLISHABLE_KEY = env('STRIPE_PUB')     # Stripe's publishable key
@@ -207,7 +239,6 @@ STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK')  # Stripe's webhook key
 
 # RabbitMQ
 CELERY_BROKER_URL = env('BROKER_URL')
-# CELERY_RESULT_BACKEND = env('BROKER_BACKEND')  # URL of the broker DB
 
 # Logs
 LOGGING = {
@@ -232,7 +263,7 @@ LOGGING = {
         'django': {
             # 'catch all' loggers by referencing it with the empty string
             'handlers': ['console', 'file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
     },
     'formatters': {

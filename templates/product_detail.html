@@ -24,7 +24,7 @@
 
     {% if recommended_products %}
       <div class="recommendations">
-        <h3>People who bought this also bought</h3>
+        <h3>Les clients qui ont acheté cet article ont aussi acheté</h3>
         {% for p in recommended_products %}
           <div class="item">
             <a href="{{ p.get_absolute_url }}">

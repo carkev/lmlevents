@@ -12,6 +12,8 @@ stripe.api_version = settings.STRIPE_API_VERSION
 
 
 def payment_process(request):
+    """Payment process.
+    """
     order_id = request.session.get('order_id', None)
     order = get_object_or_404(Order, id=order_id)
 

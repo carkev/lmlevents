@@ -1,3 +1,5 @@
+"""Module to recommend products from current cart.
+"""
 import redis
 from django.conf import settings
 from .models import Product
@@ -10,10 +12,16 @@ r = redis.Redis(host=settings.REDIS_HOST,
 
 
 class Recommender:
-    def get_product_key(self, id):
-        return f'product:{id}:purchased_with'
+    """Recommander class.
+    """
+    def get_product_key(self, product_id):
+        """Get product key.
+        """
+        return f'product:{product_id}:purchased_with'
 
     def products_bought(self, products):
+        """Bought product.
+        """
         product_ids = [p.id for p in products]
         for product_id in product_ids:
             for with_id in product_ids:
@@ -25,7 +33,10 @@ class Recommender:
                               with_id)
 
     def suggest_products_for(self, products, max_results=6):
+        """Suggest product.
+        """
         product_ids = [p.id for p in products]
+
         if len(products) == 1:
             # only 1 product
             suggestions = r.zrange(
@@ -48,10 +59,14 @@ class Recommender:
             r.delete(tmp_key)
         suggested_products_ids = [int(id) for id in suggestions]
         # get suggested products and sort by order of appearance
-        suggested_products = list(Product.objects.filter(id__in=suggested_products_ids))
-        suggested_products.sort(key=lambda x: suggested_products_ids.index(x.id))
+        suggested_products = list(
+            Product.objects.filter(id__in=suggested_products_ids))
+        suggested_products.sort(
+            key=lambda x: suggested_products_ids.index(x.id))
         return suggested_products
 
     def clear_purchases(self):
-        for id in Product.objects.values_list('id', flat=True):
-            r.delete(self.get_product_key(id))
+        """Clear purchases.
+        """
+        for product_id in Product.objects.values_list('id', flat=True):
+            r.delete(self.get_product_key(product_id))

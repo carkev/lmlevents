@@ -1,0 +1,81 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+
+{% block extend_head %}
+
+{% endblock %}
+
+{% block extend_nav %} 
+
+<ul class="sidenav">
+  <li><a href="{% url 'users:sign-in' %}">Connexion</a></li>
+  <li><a class="active" href="{% url 'users:sign-up' %}">Créer un compte</a></li>
+  <li><a href="{% url 'users:forgotten-password' %}">Mot de passe oublié</a></li>
+</ul>
+
+{% endblock %}
+
+
+{% block content %}
+
+<h3>Création de compte</h3>
+
+<div class="container">
+
+
+  <form id="signupform" method="POST" action="/sign-up/">
+    {% csrf_token %}
+
+    <label for="username">Username</label>
+    {{u_form.username}}
+
+    <label for="password1">Password</label>
+    {{u_form.password1}}
+
+    <label for="password2">Confirm Password</label>
+    {{u_form.password2}}
+
+    <label class="check-container">Montrer
+     <input type="checkbox" onclick="showPword()">
+     <span class="checkmark"></span>
+   </label>
+
+   <label for="first_name">Prénom</label>
+   {{u_form.first_name}}
+
+   <label for="last_name">Nom</label>
+   {{u_form.last_name}}
+
+   <label for="address">Addresse</label>
+   {{up_form.address}}
+
+   <label for="town">Ville</label>
+   {{up_form.town}}
+
+   <label for="county">Région</label>
+   {{up_form.county}}
+
+   <label for="post_code">Code postale</label>
+   {{up_form.post_code}}
+
+   <label for="post_code">Pays</label>
+   {{up_form.country}}
+
+   <label for="telephone">Telephone</label>
+   {{up_form.telephone}}
+
+   <button type="submit">Créer</button>
+ </form>
+
+ {{u_form.errors}}
+ {{up_form.errors}}
+
+</div>
+
+{% endblock %}
+
+{% block extend_footer %}
+
+
+{% endblock %}

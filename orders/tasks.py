@@ -1,5 +1,4 @@
-"""Celery's task: send mail notification when an order 
-is successfully created.
+"""Celery's task: send mail notification when an order is successfully created.
 """
 from celery import shared_task
 from django.conf import settings

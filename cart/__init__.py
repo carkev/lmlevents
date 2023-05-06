@@ -1,0 +1,2 @@
+"""Cart application management.
+"""

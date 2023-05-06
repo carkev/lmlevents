@@ -1,16 +1,24 @@
+""""Shop app models.
+"""
+import sys
 from io import BytesIO
 from django.core.files import File
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 from django.urls import reverse
 from PIL import Image
 
 
 class Category(models.Model):
+    """Class of category model.
+    """
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200,
                             unique=True)
 
     class Meta:
+        """Change this class behaviour.
+        """
         ordering = ['name']
         indexes = [
             models.Index(fields=['name']),
@@ -22,16 +30,21 @@ class Category(models.Model):
         return str(self.name)
 
     def get_absolute_url(self):
+        """Get absolute URL.
+        """
         return reverse('shop:product_list_by_category',
                        args=[self.slug])
 
 
 class Size(models.Model):
+    """Size class model.
+    """
     name = models.CharField(max_length=5)
     description = models.TextField(blank=True)
 
-
     class Meta:
+        """Change this class behaviour.
+        """
         verbose_name = 'size'
 
     def __str__(self):
@@ -39,6 +52,8 @@ class Size(models.Model):
 
 
 class Product(models.Model):
+    """Product model class.
+    """
     category = models.ForeignKey(Category,
                                  related_name='products',
                                  on_delete=models.CASCADE)
@@ -54,6 +69,8 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
+        """Change this class behaviour.
+        """
         ordering = ['name']
         indexes = [
             models.Index(fields=['id', 'slug']),
@@ -65,19 +82,40 @@ class Product(models.Model):
         return str(self.name)
 
     def get_absolute_url(self):
+        """Get absolute URL.
+        """
         return reverse('shop:product_detail',
-                       args=[self.id, self.slug])
+                       args=[self.pk, self.slug])
 
     # before saving the instance we’re reducing the image
     def save(self, *args, **kwargs):
-        new_image = self.reduce_image_size(self.image)
-        self.image = new_image
-        super().save(*args, **kwargs)
+        if not self.pk:
+            self.image = self.reduce_image_size(self.image)
+        super(Product, self).save(*args, **kwargs)
 
-    def reduce_image_size(self, profile_pic):
-        print(profile_pic)
-        img = Image.open(profile_pic)
-        thumb_io = BytesIO()
-        img.save(thumb_io, 'jpeg', quality=50)
-        new_image = File(thumb_io, name=profile_pic.name)
+    def reduce_image_size(self, picture):
+        """Reduce the image size.
+        """
+        try:
+            try:
+                img = Image.open(picture)
+                thumb_io = BytesIO()
+                img.save(thumb_io, 'jpeg', quality=50)
+            except OSError:
+                img = img.convert('RGB')
+                thumb_io = BytesIO()
+                img.save(thumb_io, 'jpeg', quality=50)
+
+            new_image = File(thumb_io, name=picture.name)
+            thumb_io.seek(0)
+            picture = InMemoryUploadedFile(
+                thumb_io,
+                'ImageField',
+                f"{picture.name.split('.')[0]}.jpg",
+                'image/jpeg',
+                sys.getsizeof(thumb_io),
+                None)
+        except OSError:
+            new_image = self.image
+
         return new_image

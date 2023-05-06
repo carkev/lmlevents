@@ -26,7 +26,7 @@ dash-table==5.0.0
 Deprecated==1.2.13
 dj-database-url==1.2.0
 dj-email-url==1.0.6
-Django==3.2.18
+Django==4.1.7
 django-appconf==1.0.5
 django-autoslug==1.9.8
 django-bootstrap5==22.2
@@ -34,6 +34,7 @@ django-cache-url==3.4.4
 django-celery-results==2.4.0
 django-cookie-consent==0.3.1
 django-crispy-forms==2.0
+django-extensions==3.2.1
 django-nine==0.2.7
 django-otp==1.1.4
 django-redis==5.2.0
@@ -46,7 +47,7 @@ environs==9.5.0
 feedparser==6.0.10
 Flask==2.2.3
 flower==1.2.0
-fontawesomefree==6.3.0
+fontawesomefree==6.4.0
 fonttools==4.38.0
 html5lib==1.1
 humanize==4.6.0
@@ -63,6 +64,7 @@ msgpack==1.0.4
 numpy==1.24.2
 packaging==23.0
 pandas==1.5.3
+phonenumbers==8.13.7
 pif==0.8.2
 Pillow==9.2.0
 plotly==5.13.0
@@ -71,8 +73,12 @@ prompt-toolkit==3.0.36
 psycopg2-binary==2.9.5
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
+pycountry==22.3.5
 pycparser==2.21
+pydot==1.4.2
 pydyf==0.5.0
+PyJWT==2.6.0
+pyparsing==3.0.9
 pyOpenSSL==23.0.0
 pyphen==0.13.2
 python-dateutil==2.8.2
@@ -89,8 +95,7 @@ tenacity==8.2.1
 tinycss2==1.2.1
 tornado==6.2
 transliterate==1.10.2
-Twisted==22.10.0
-twisted-iocpsupport==1.0.2
+twilio==7.16.4
 txaio==23.1.1
 typing_extensions==4.5.0
 tzdata==2022.7

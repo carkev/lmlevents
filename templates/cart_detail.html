@@ -2,20 +2,20 @@
 {% load static %}
 
 {% block title %}
-  Your shopping cart
+  Panier
 {% endblock %}
 
 {% block content %}
-  <h1>Your shopping cart</h1>
+  <h1>Votre panier</h1>
   <table class="cart">
     <thead>
       <tr>
         <th>Image</th>
-        <th>Product</th>
-        <th>Quantity</th>
-        <th>Remove</th>
-        <th>Unit price</th>
-        <th>Price</th>
+        <th>Produit</th>
+        <th>Quantité</th>
+        <th>Supprimer</th>
+        <th>Prix unitaire(€)</th>
+        <th>Prix</th>
       </tr>
     </thead>
     <tbody>
@@ -79,7 +79,7 @@
   
   {% if recommended_products %}
     <div class="recommendations cart">
-      <h3>People who bought this also bought</h3>
+      <h3>Les clients qui ont acheté ce produit ont aussi aimé</h3>
       {% for p in recommended_products %}
         <div class="item">
           <a href="{{ p.get_absolute_url }}">
@@ -92,7 +92,7 @@
     </div>
   {% endif %}
 
-  <p>Apply a coupon:</p>
+  <p>Utiliser une réduction:</p>
   <form action="{% url 'coupons:apply' %}" method="post">
     {{ coupon_apply_form }}
     <input type="submit" value="Apply">
@@ -101,8 +101,8 @@
 
   <p class="text-right">
     <a href="{% url 'shop:product_list' %}" class="button
-    light">Continue shopping</a>
-    <a href="{% url 'orders:order_create' %}" class="button">Checkout</a>
+    light">Continuer le shopping</a>
+    <a href="{% url 'orders:order_create' %}" class="button">Payer</a>
   </p>
 
 {% endblock %}
