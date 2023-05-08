@@ -371,6 +371,22 @@ form div.field {
     padding-top: 0 !important;
 }
 
+#subheader div.cart a.cart-icon .cart-basket {
+    font-size: .6rem;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 15px;
+    height: 15px;
+    color: #fff;
+    background-color: #4180CB;
+    border-radius: 50%;
+  }
+
+  #subheader div.cart a.cart-icon .fa-cart-shopping {
+    margin-top: 1vh;
+  }
+
 .footer{
     background: #152F4F;
     color:white;

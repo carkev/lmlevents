@@ -24,9 +24,10 @@ def payment_completed(order_id):
                          settings.EMAIL_HOST_USER,
                          [order.email])
     # generate PDF
-    html = render_to_string('order_pdf.html', {'order': order})
+    html = render_to_string('order/order_pdf.html', {'order': order})
     out = BytesIO()
-    stylesheets = [weasyprint.CSS(settings.STATIC_ROOT / 'css/pdf.css')]
+    stylesheets = [
+        weasyprint.CSS(settings.STATICFILES_DIRS[0] / 'css/pdf.css')]
     weasyprint.HTML(string=html).write_pdf(out,
                                            stylesheets=stylesheets)
     # attach PDF file

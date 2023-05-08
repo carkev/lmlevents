@@ -47,14 +47,17 @@
       </div>
 
       <div class="cart mr-2">
-        <i class="fa-solid fa-cart-shopping"></i>
         {% with total_items=cart|length %}
           {% if total_items > 0 %}
-            <a href="{% url 'cart:cart_detail' %}">
-              {{ total_items }} article{{ total_items|pluralize }},
-              €{{ cart.get_total_price }}
+            <a href="{% url 'cart:cart_detail' %}" class="cart-icon position-relative d-inline-flex" aria-label="Détail de votre panier">
+              €{{ cart.get_total_price }}&nbsp;&nbsp;
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span class="cart-basket d-flex align-items-center justify-content-center">
+                {{ total_items }}
+              </span>
             </a>
           {% elif not order %}
+            <i class="fa-solid fa-cart-shopping"></i>
           {% endif %}
         {% endwith %}
       </div>

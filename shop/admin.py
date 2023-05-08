@@ -1,15 +1,21 @@
+"""Admin panel settings.
+"""
 from django.contrib import admin
 from .models import Category, Product
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    """Add Categories to admin panel.
+    """
     list_display = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    """Add products in admin panel.
+    """
     list_display = ['name', 'slug', 'price',
                     'available', 'created', 'updated']
     list_filter = ['available', 'created', 'updated']

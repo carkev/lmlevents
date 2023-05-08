@@ -47,7 +47,7 @@ def order_create(request):
         form = OrderCreateForm()
 
     return render(request,
-                  'order_create.html',
+                  'order/order_create.html',
                   {'cart': cart, 'form': form})
 
 
@@ -66,7 +66,7 @@ def admin_order_pdf(request, order_id):
     """Order's PDF generator for staff members.
     """
     order = get_object_or_404(Order, id=order_id)
-    html = render_to_string('order_pdf.html',
+    html = render_to_string('order/order_pdf.html',
                             {'order': order})
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'filename=order_{order.id}.pdf'

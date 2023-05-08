@@ -36,21 +36,6 @@ class Category(models.Model):
                        args=[self.slug])
 
 
-class Size(models.Model):
-    """Size class model.
-    """
-    name = models.CharField(max_length=5)
-    description = models.TextField(blank=True)
-
-    class Meta:
-        """Change this class behaviour.
-        """
-        verbose_name = 'size'
-
-    def __str__(self):
-        return str(self.name)
-
-
 class Product(models.Model):
     """Product model class.
     """

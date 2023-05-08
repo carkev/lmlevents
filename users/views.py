@@ -199,7 +199,7 @@ def forgotten_password(request):
                 subject='Réinitialisation de votre mot de passe',
                 email=user.username,
                 cc=[],
-                template="password_email.html",
+                template="mail/password_email.html",
                 token=make_token,
                 url_safe=urlsafe_base64_encode(force_bytes(user.pk))
             )
@@ -277,7 +277,7 @@ def email(request):
             subject='Vérifiez votre email',
             email=user.username,
             cc=[],
-            template="verification_email.html",
+            template="mail/verification_email.html",
             token=make_token,
             url_safe=url_safe)
 

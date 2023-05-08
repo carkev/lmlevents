@@ -61,7 +61,7 @@ def cart_detail(request):
         recommended_products = []
 
     return render(request,
-                  'cart_detail.html',
+                  'cart/cart_detail.html',
                   {'cart': cart,
                    'coupon_apply_form': coupon_apply_form,
                    'recommended_products': recommended_products})
