@@ -1,0 +1,1 @@
+v=DMARC1; p=none; pct=100; rua=mailto:contact.lmlevents49+mailreporting@gmail.com; ruf=mailto:contact.lmlevents49+forensicreport@gmail.com; sp=none; aspf=r; fo=1;

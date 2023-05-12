@@ -1,3 +1,5 @@
+"""Admin panel module.
+"""
 import csv
 import datetime
 from django.http import HttpResponse
@@ -8,6 +10,8 @@ from .models import Order, OrderItem
 
 
 def export_to_csv(modeladmin, request, queryset):
+    """Export order to csv file.
+    """
     opts = modeladmin.model._meta
     content_disposition = f'attachment; filename={opts.verbose_name}.csv'
     response = HttpResponse(content_type='text/csv')
@@ -27,35 +31,51 @@ def export_to_csv(modeladmin, request, queryset):
             data_row.append(value)
         writer.writerow(data_row)
     return response
+
+
 export_to_csv.short_description = 'Export to CSV'
 
 
 class OrderItemInline(admin.TabularInline):
+    """Display the Many to many relation between Order and Product.
+    """
     model = OrderItem
     raw_id_fields = ['product']
 
 
 def order_payment(obj):
+    """Get the stripe id url of the current order.
+    """
     url = obj.get_stripe_url()
     if obj.stripe_id:
         html = f'<a href="{url}" target="_blank">{obj.stripe_id}</a>'
         return mark_safe(html)
     return ''
+
+
 order_payment.short_description = 'Stripe payment'
 
 def order_detail(obj):
+    """Invoice detail.
+    """
     url = reverse('orders:admin_order_detail', args=[obj.id])
     return mark_safe(f'<a href="{url}">View</a>')
 
 
 def order_pdf(obj):
+    """Generate PDF from order.
+    """
     url = reverse('orders:admin_order_pdf', args=[obj.id])
     return mark_safe(f'<a href="{url}">PDF</a>')
+
+
 order_pdf.short_description = 'Invoice'
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    """Display all fields on panel admin.
+    """
     list_display = ['id', 'first_name', 'last_name', 'email',
                     'address', 'postal_code', 'city', 'paid',
                     order_payment, 'created', 'updated',
