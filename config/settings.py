@@ -64,6 +64,11 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'payment.apps.PaymentConfig',
     'shop.apps.ShopConfig',
+    'news.apps.NewsConfig',
+    'embed_video',
+    'redisboard',
+    'users.apps.UsersConfig',
+    'tinymce',
 ]
 
 MIDDLEWARE = [
@@ -98,6 +103,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 60 * 15  # 15 minutes
+CACHE_MIDDLEWARE_KEY_PREFIX = 'lmlevents'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

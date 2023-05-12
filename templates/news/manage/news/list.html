@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}My news{% endblock %}
+
+{% block content %}
+  <h1>My news</h1>
+  <div class="module">
+    {% for news in object_list %}
+      <div class="news-info">
+        <h3>{{ news.title }}</h3>
+        <p>
+          <a href="{% url 'news:news_edit' news.id %}">Edit</a> |
+          <a href="{% url 'news:news_delete' news.id %}">Delete</a> 
+          {% if news.modules.count > 0 %}
+            | <a href="{% url 'news:module_content_list' news.modules.first.id %}">
+            Manage contents</a>
+          {% endif %}
+        </p>
+      </div>
+    {% empty %}
+      <p>You haven't created any news yet.</p>
+    {% endfor %}
+    <p>
+      <a href="{% url 'news:news_create' %}" class="button">Create new news</a>
+    </p>
+  </div>
+{% endblock %}

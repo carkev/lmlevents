@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if subject %}
+    {{ subject.title }} news
+  {% else %}
+    All news
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <h1>
+    {% if subject %}
+      {{ subject.title }} news
+    {% else %}
+      All news
+    {% endif %}
+  </h1>
+  <div class="contents">
+    <h3>Subjects</h3>
+    <ul id="modules">
+      <li {% if not subject %}class="selected"{% endif %}>
+        <a href="{% url 'news_list' %}">All</a>
+      </li>
+      {% for s in subjects %}
+        <li {% if subject == s %}class="selected"{% endif %}>
+          <a href="{% url 'news:news_list_subject' s.slug %}">
+            {{ s.title }}
+            <br>
+            <span>{{ s.total_news }} news</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="module">
+    {% for news in news %}
+      {% with subject=news.subject %}
+        <h3>
+          <a href="{% url 'news:news_detail' news.slug %}">
+            {{ news.title }}
+          </a>
+        </h3>
+        <p>
+          <a href="{% url 'news:news_list_subject' subject.slug %}">{{ subject }}</a>.
+            {{ news.total_modules }} modules.
+            Instructor: {{ news.owner.get_full_name }}
+        </p>
+      {% endwith %}
+    {% endfor %}
+  </div>
+{% endblock %}
