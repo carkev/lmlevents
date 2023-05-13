@@ -59,20 +59,20 @@ class UserProfileForm(forms.ModelForm):
     '''
     telephone = forms.CharField(
         max_length=15, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*Telephone..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Téléphone..'}))
     address = forms.CharField(
         max_length=100, required=True,
         widget=forms.TextInput(
-            attrs={'placeholder': '*First line of address..'}))
+            attrs={'placeholder': '*Adresse..'}))
     town = forms.CharField(
         max_length=100, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*Town or City..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Ville..'}))
     county = forms.CharField(
         max_length=100, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*County..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Région..'}))
     post_code = forms.CharField(
         max_length=8, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*Postal Code..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Code Postale..'}))
     country = forms.CharField(
         max_length=100, required=True,
         widget=forms.Select(attrs={"class": "selection"}, choices=COUNTRIES))

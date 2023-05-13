@@ -7,13 +7,11 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class Coupon(models.Model):
     """Model of a Coupon.
     """
-    code = models.CharField(max_length=50,
-                            unique=True)
+    code = models.CharField(max_length=50, unique=True)
     valid_from = models.DateTimeField()
     valid_to = models.DateTimeField()
     discount = models.IntegerField(
-                   validators=[MinValueValidator(0),
-                               MaxValueValidator(100)],
+                   validators=[MinValueValidator(0), MaxValueValidator(100)],
                    help_text='Pourcentage de remise (0 à 100)')
     active = models.BooleanField()
 

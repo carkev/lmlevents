@@ -236,11 +236,13 @@ def account(request):
             content_type="application/json")
 
     context = {}
+    # TODO add an owner to Coupon model and add it to the context to
+    # display it in the account template.
     # Passes 'verified' parameter to url to handle a success message
     verified = request.GET.get("verified", None)
 
-    query = Order.objects.filter(email=request.user.email)
-    context = {'invoices': query}
+    order_query = Order.objects.filter(email=request.user.email)
+    context = {'invoices': order_query}
 
     if verified:
         context["verified"] = "true"

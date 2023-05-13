@@ -12,12 +12,30 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 import logging
 from io import TextIOWrapper
+# import sentry_sdk
 import socket
 from pathlib import Path
 from environs import Env
 
 # Logger
 logger = logging.getLogger(__file__)
+
+# Sentry
+# sentry_sdk.init(
+#     dsn="https://examplePublicKey@o0.ingest.sentry.io/0",
+#     integrations=[
+#        DjangoIntegration(
+#           transaction_style='url',
+#           middleware_spans=True,
+#           signals_spans=False,
+#           cache_spans=False,
+#        ),
+#     ],
+#     # Set traces_sample_rate to 1.0 to capture 100%
+#     # of transactions for performance monitoring.
+#     # We recommend adjusting this value in production,
+#     traces_sample_rate=1.0,
+# )
 
 # Environment settings
 env = Env()
@@ -54,6 +72,7 @@ LOCALS = [
     'shop.apps.ShopConfig',
     'coupons.apps.CouponsConfig',
     'users.apps.UsersConfig',
+    'django.contrib.admindocs',
 ]
 
 TESTS = [
@@ -96,6 +115,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.admindocs.middleware.XViewMiddleware',
 ]
 
 if DEBUG:
