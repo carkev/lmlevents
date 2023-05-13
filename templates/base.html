@@ -1,33 +1,81 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>{% block title %}My shop{% endblock %}</title>
+    <title>{% block title %}LML Event shop{% endblock %}</title>
+    <link rel="stylesheet" 
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" 
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
+          crossorigin="anonymous">
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>
+    <link href="{% static 'fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
   </head>
+
   <body>
-    <div id="header">
-      <a href="/" class="logo">My shop</a>
+
+    <div id="header" class="header d-flex justify-content-between" style="{height: 15% !important; padding: 0 10%;}">
+
+      <div class="logo-block h-10 w-25 pb-2" class="flex-shrink-0">
+        <a href="/" class="logo">
+          <img class="img-fluid img-logo" src="{% static 'img/logo.png' %}" alt="Logo">
+        </a>
+      </div>
+
+      <div class="top-menu" class="flex-shrink-1">
+        {% if user.is_authenticated %}
+          <a href="{% url 'users:account' %}"><i class="fa-regular fa-circle-user" style="color: #ebf2ff;"></i></a>
+          <a href="{% url 'users:sign-out' %}"><i class="fa-solid fa-right-from-bracket"></i></a>
+        {% else %}
+          <a href="{% url 'users:sign-in' %}"><i class="fa-regular fa-right-to-bracket"></i></a>
+          <a href="{% url 'users:sign-up' %}"><i class="fa-regular fa-user-plus"></i></a>
+        {% endif %}
+      </div>
+
     </div>
-    <div id="subheader">
-      <div class="cart">
+
+    <div id="subheader" class="subheader d-flex justify-content-between">
+
+      <div class="nav">
+        <a class="nav-link" href="{% url 'pages:home' %}">Accueil</a>  <p class="sep">|</p>
+        <a class="nav-link" href="{% url 'shop:product_list' %}">Boutique</a>  <p class="sep">|</p>
+        <!-- <a class="nav-link" href="#">Blog</a>  <p class="sep">|</p> -->
+        <a class="nav-link" href="{% url 'pages:about' %}">About</a>
+      </div>
+
+      <div class="cart mr-2">
         {% with total_items=cart|length %}
           {% if total_items > 0 %}
-            Your cart:
-            <a href="{% url 'cart:cart_detail' %}">
-              {{ total_items }} item{{ total_items|pluralize }},
-              ${{ cart.get_total_price }}
+            <a href="{% url 'cart:cart_detail' %}" class="cart-icon position-relative d-inline-flex" aria-label="Détail de votre panier">
+              €{{ cart.get_total_price }}&nbsp;&nbsp;
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span class="cart-basket d-flex align-items-center justify-content-center">
+                {{ total_items }}
+              </span>
             </a>
           {% elif not order %}
-            Your cart is empty.
+            <i class="fa-solid fa-cart-shopping"></i>
           {% endif %}
         {% endwith %}
       </div>
+
     </div>
+
     <div id="content">
+
       {% block content %}
-      {% endblock %}
+      {% endblock content %}
+
     </div>
+
+    {% include "_footer.html" %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+            crossorigin="anonymous"></script>
+
   </body>
 </html>

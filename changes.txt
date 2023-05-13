@@ -1,0 +1,59 @@
+____________________________________________________________
+LML Events 1.0.0 (30/04/2023)
+
+INITIAL CHANGES
+
+  This version is the first one and can't be deployed yet.
+
+* cart
+    - Create cart application to manage cart.
+
+* config
+    - Create config application to manage project settings.
+
+* coupons
+    - Create coupons application to manage discount.
+
+* orders
+    - Create oreders application to manage orders and messages with Celery & RabbitMQ.
+
+* pages
+    - Create pages application to manage static pages.
+
+* payment
+    - Create payment application to manage payment with Stripe and message with Celery and RabbitMQ.
+
+* shop
+    - Create shop application to manage products.
+
+* static
+    - Create static folder which contains all statics.
+    - Create all static subfolders.
+    - Create js files.
+    - Create  css files.
+    - Create img files.
+
+* templates
+    - Create template folder which contains all HTML files.
+    - Create HTML files.
+    - Create template subfolders.
+
+* media
+    - Create a media folder to stock pictures & videos.
+
+* users
+    - Create users application to manage the user profile & authentication with Twilio.
+
+* utils
+    - Create util application to manage the project version.
+
+* Dockerfile & docker-compose.yaml
+    - Create and complete Dockerfile.
+    - Create and complete docker-compose file.
+
+* README.md & VERSION.txt
+    - Create and complete as I can README file.
+    - Create and complete VERSION file.
+
+
+____________________________________________________________

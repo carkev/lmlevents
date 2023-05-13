@@ -1,0 +1,53 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+
+{% block extend_head %}
+
+{% endblock %}
+
+
+{% block extend_nav %}
+
+<ul class="sidenav">
+  <li><a class="active" href="javascript:void(0)">Mot de passe oublié</a></li>
+  <li><a href="{% url 'users:sign-in' %}">Connexion</a></li>
+  <li><a href="{% url 'users:sign-up' %}">Créer un mot de passe</a></li>
+</ul>
+
+{% endblock %}
+
+
+{% block content %}
+
+<h3>Réinitialisation du mot de passe</h3>
+
+<div class="container">
+
+  <form id="updatepasswordform" method="POST" action="/verification/{{uidb64}}/{{token}}/">
+    {% csrf_token %}
+
+    <label for="new_password1">Mot de passe</label>
+    {{fp_form.new_password1}}
+
+    <label for="new_password2">Confirmer</label>
+    {{fp_form.new_password2}}
+
+    <label class="check-container">Montrer
+     <input type="checkbox" onclick="showPword()">
+     <span class="checkmark"></span>
+   </label>
+
+   <button type="submit">Réinitialiser</button>
+ </form>
+
+ {{fp_form.errors}}
+
+</div>
+
+{% endblock %}
+
+{% block extend_footer %}
+
+
+{% endblock %}
