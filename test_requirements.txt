@@ -45,7 +45,7 @@ dpd-components==0.1.0
 easy-thumbnails==2.8.5
 environs==9.5.0
 feedparser==6.0.10
-Flask==2.2.3
+Flask==2.2.5
 flower==1.2.0
 fontawesomefree==6.4.0
 fonttools==4.38.0
