@@ -1,3 +1,5 @@
+"""Stripe webhook module.
+"""
 import stripe
 from django.conf import settings
 from django.http import HttpResponse
@@ -8,6 +10,8 @@ from .tasks import payment_completed
 
 @csrf_exempt
 def stripe_webhook(request):
+    """Webhook for stripe.
+    """
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None
@@ -17,20 +21,23 @@ def stripe_webhook(request):
                     payload,
                     sig_header,
                     settings.STRIPE_WEBHOOK_SECRET)
-    except ValueError as e:
+    except ValueError:
         # Invalid payload
         return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError as e:
+    except stripe.error.SignatureVerificationError:
         # Invalid signature
         return HttpResponse(status=400)
 
     if event.type == 'checkout.session.completed':
         session = event.data.object
+
         if session.mode == 'payment' and session.payment_status == 'paid':
+
             try:
                 order = Order.objects.get(id=session.client_reference_id)
             except Order.DoesNotExist:
                 return HttpResponse(status=404)
+
             # mark order as paid
             order.paid = True
             # store Stripe payment ID

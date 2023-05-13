@@ -1,3 +1,4 @@
-from django.db import models
-
+"""Cart model.
+"""
+# from django.db import models
 # Create your models here.

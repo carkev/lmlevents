@@ -1,0 +1,139 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+
+{% block extend_head %}
+
+{% endblock %}
+
+
+{% block extend_nav %}
+
+<ul class="sidenav">
+  <li><a class="active" href="{% url 'users:account' %}">Compte utilisateur</a></li>
+  <li><a href="{% url 'users:sign-out' %}">Déconnexion</a></li>
+  <li><a href="{% url 'shop:product_list' %}">Boutique</a></li>
+</ul>
+
+{% endblock %}
+
+
+{% block content %}
+
+<h3>Profil utilisateur</h3>
+
+<div class="container">
+
+  <h4>Détail du compte utilisateur</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Champ</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Username</td>
+
+        {% if request.user.userprofile.email_verified %}
+          <td>{{request.user.username}} <b style="color:green">(vérifié)</b></td>
+        {% else %}
+          <td>{{request.user.username}} <a href="javascript:void(0)" onclick="EmailVerification()"><b style="color:red">(à vérifier)</b></a></td>
+        {% endif %}
+ 
+      </tr>
+      <tr>
+        <td>Nom</td>
+        <td>{{request.user.first_name}} {{request.user.last_name}}</td>      
+      </tr>
+      <tr>
+        <td>Téléphone</td>
+        <td>{{request.user.userprofile.telephone}}</td>      
+      </tr>
+      <tr>
+        <td>Addresse</td>
+        <td>
+          <address>
+            {{request.user.userprofile.address}}<br>
+            {{request.user.userprofile.town}}<br>
+            {{request.user.userprofile.county}}<br>
+            {{request.user.userprofile.post_code}}<br>
+          </address>
+        </td>      
+      </tr>
+
+      {% if request.user.userprofile.two_step_active %}
+      <tr>
+        <td id="2-step-term">Désactiver la double authentification</td>
+        <td>  
+          <label class="switch">
+            <input id="2-step-toggle" type="checkbox" checked>
+            <span class="slider round" onclick="Toggle()"></span>
+          </label>
+        </td>     
+      </tr>
+      {% else %}
+      <tr>
+        <td id="2-step-term">Activer la double authentification</td>
+        <td>  
+          <label class="switch">
+            <input id="2-step-toggle" type="checkbox">
+            <span class="slider round" onclick="Toggle()"></span>
+          </label>
+        </td>       
+      </tr>
+      {% endif %}
+
+
+    </tbody>
+  </table>
+
+  <br>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Factures</th>
+        <th>Total € TTC</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+
+        {% for invoice in invoices %}
+          <td>{{ invoice }}</td>
+          <td>{{ invoice.get_total_cost }}</td>
+          {% if invoice.paid %}
+            <td>Payée</td>
+          {% else %}
+            <td>Non payée</td>
+          {% endif %}
+        {% empty %}
+          <td></td>
+          <td></td>
+          <td></td>
+        {% endfor %}
+ 
+      </tr>
+    </tbody>
+  </table>
+
+
+
+</div>
+
+<!-- This handels the verified url param & displays a success alert-->
+<script type="text/javascript">
+  let ver = "{{ verified|safe }}";
+  if (ver == "true"){
+    alert("Merci, votre email a été vérifié.");
+  }
+</script>
+
+{% endblock %}
+
+{% block extend_footer %}
+
+{% endblock %}
