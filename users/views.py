@@ -9,8 +9,16 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import FormView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from orders.models import Order
+from news.models import News
 
 from .models import UserToken
 from .mixins import (
@@ -391,3 +399,45 @@ def verification(request, uidb64, token):
         context = {'ts_form': ts_form, "uidb64": uidb64, "token": token}
 
         return render(request, 'users/two_step_verification.html', context)
+
+
+# class UserEnrollNewsView(LoginRequiredMixin, FormView):
+#     news = None
+#     form_class = NewsEnrollForm
+#     def form_valid(self, form):
+#         self.news = form.cleaned_data['news']
+#         self.news.users.add(self.request.user)
+#         return super().form_valid(form)
+#     def get_success_url(self):
+#         return reverse_lazy('user_news_detail',
+#                             args=[self.news.id])
+
+
+class UserNewsListView(LoginRequiredMixin, ListView):
+    model = News
+    template_name = 'users/news/list.html'
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(owner__in=[self.request.user])
+
+
+class UserNewsDetailView(DetailView):
+    model = News
+    template_name = 'users/news/detail.html'
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(owner__in=[self.request.user])
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # get news object
+        news = self.get_object()
+        if 'module_id' in self.kwargs:
+            # get current module
+            context['module'] = news.modules.get(
+                                    id=self.kwargs['module_id'])
+        else:
+            # get first module
+            context['module'] = news.modules.all()[0]
+        return context

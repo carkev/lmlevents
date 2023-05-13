@@ -18,6 +18,8 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from news.views import NewsListView
 
 
 urlpatterns = [
@@ -26,6 +28,9 @@ urlpatterns = [
     path('cart/', include('cart.urls', namespace='cart')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('payment/', include('payment.urls', namespace='payment')),
+    path('tinymce/', include('tinymce.urls')),
+    path('news/', include('news.urls',namespace='news')),
+    path('news-list/', NewsListView.as_view(), name='news_list'),
     path('coupons/', include('coupons.urls', namespace='coupons')),
     # path("cookies/", include("cookie_consent.urls")),
     path('shop', include('shop.urls', namespace='shop')),

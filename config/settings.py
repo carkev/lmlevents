@@ -54,6 +54,7 @@ LOCALS = [
     'shop.apps.ShopConfig',
     'coupons.apps.CouponsConfig',
     'users.apps.UsersConfig',
+    'news.apps.NewsConfig',
 ]
 
 TESTS = [
@@ -71,6 +72,9 @@ THIRD_PART = [
     "django_bootstrap5",
     'fontawesomefree',
     'crispy_forms',
+    'embed_video',
+    'redisboard',
+    'tinymce',
 ]
 
 DJANGO_APPS = [
@@ -126,6 +130,11 @@ TEMPLATES = [
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 ASGI_APPLICATION = 'config.asgi.application'
 WSGI_APPLICATION = 'config.wsgi.application'
+
+
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 60 * 15  # 15 minutes
+CACHE_MIDDLEWARE_KEY_PREFIX = 'lmlevents'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

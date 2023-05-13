@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if object %}
+    Edit news "{{ object.title }}"
+  {% else %}
+    Create a new news
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <h1>
+    {% if object %}
+      Edit news "{{ object.title }}"
+    {% else %}
+      Create a new news
+    {% endif %}
+  </h1>
+  <div class="module">
+    <h2>news info</h2>
+    <form method="post">
+      {{ form.as_p }}
+      {% csrf_token %}
+      <p><input type="submit" value="Save news"></p>
+    </form>
+  </div>
+{% endblock %}
