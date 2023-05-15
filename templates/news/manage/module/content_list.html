@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load news %}
+
+{% block title %}
+  Article {{ module.order|add:1 }}: {{ module.title }}
+{% endblock %}
+
+{% block content %}
+{% with news=module.news %}
+  <h1>Actualité "{{ news.title }}"</h1>
+  <div class="contents">
+    <h3>Article</h3>
+    <ul id="modules">
+      {% for m in news.modules.all %}
+        <li data-id="{{ m.id }}" {% if m == module %}class="selected"{% endif %}>
+          <a href="{% url 'news:module_content_list' m.id %}">
+            <span>
+              Article <span class="order">{{ m.order|add:1 }}</span>
+            </span>
+            <br>
+            {{ m.title }}
+          </a>
+        </li>
+      {% empty %}
+        <li>Aucun article disponible pour le moment.</li>
+      {% endfor %}
+    </ul>
+    <p><a href="{% url 'news:news_module_update' news.id %}">
+     Modifier les articles</a></p>
+  </div>
+  <div class="module">
+    <h2>Article {{ module.order|add:1 }}: {{ module.title }}</h2>
+    <h3>Contenu de l'article:</h3>
+    <div id="module-contents">
+      {% for content in module.contents.all %}
+        <div data-id="{{ content.id }}">
+          {% with item=content.item %}
+            <p>{{ item }} ({{ item|model_name }})</p>
+            <a href="{% url 'news:module_content_update' module.id item|model_name item.id %}">
+              Modifier
+            </a>
+            <form action="{% url 'news:module_content_delete' content.id %}" method="post">
+              <input type="submit" value="Supprimer">
+              {% csrf_token %}
+            </form>
+            {% endwith %}
+        </div>
+      {% empty %}
+        <p>Cet article n'a pas encore de contenu.</p>
+      {% endfor %}
+    </div>
+    <h3>Ajouter un nouveau contenu:</h3>
+    <ul class="content-types">
+      <li>
+        <a href="{% url 'news:module_content_create' module.id 'text' %}">Texte</a>
+      </li>
+      <li>
+        <a href="{% url 'news:module_content_create' module.id 'image' %}">Image</a>
+      </li>
+      <li>
+        <a href="{% url 'news:module_content_create' module.id 'video' %}">Vidéo</a>
+      </li>
+      <li>
+        <a href="{% url 'news:module_content_create' module.id 'file' %}">Fichier</a>
+      </li>
+    </ul>
+  </div>
+{% endwith %}
+{% endblock %}
+
+{% block include_js %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.13.3/html5sortable.min.js"></script>
+{% endblock %}
+
+{% block domready %}
+  var options = {
+      method: 'POST',
+      mode: 'same-origin'
+  }
+
+  const moduleOrderUrl = "{% url 'news:module_order' %}";
+
+  sortable('#modules', {
+    forcePlaceholderSize: true,
+    placeholderClass: 'placeholder'
+  })[0].addEventListener('sortupdate', function(e) {
+
+    modulesOrder = {};
+    var modules = document.querySelectorAll('#modules li');
+    modules.forEach(function (module, index) {
+      // update module index
+      modulesOrder[module.dataset.id] = index;
+      // update index in HTML element
+      module.querySelector('.order').innerHTML = index + 1;
+      // add new order to the HTTP request options
+      options['body'] = JSON.stringify(modulesOrder);
+
+      // send HTTP request
+      fetch(moduleOrderUrl, options)
+    });
+  });
+
+  const contentOrderUrl = "{% url 'news:content_order' %}";
+
+  sortable('#module-contents', {
+    forcePlaceholderSize: true,
+    placeholderClass: 'placeholder'
+  })[0].addEventListener('sortupdate', function(e) {
+
+    contentOrder = {};
+    var contents = document.querySelectorAll('#module-contents div');
+    contents.forEach(function (content, index) {
+      // update content index
+      contentOrder[content.dataset.id] = index;
+      // add new order to the HTTP request options
+      options['body'] = JSON.stringify(contentOrder);
+
+      // send HTTP request
+      fetch(contentOrderUrl, options)
+    });
+  });
+
+{% endblock %}

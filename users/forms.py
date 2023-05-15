@@ -15,19 +15,20 @@ class UserForm(UserCreationForm):
     '''
     first_name = forms.CharField(
         max_length=30, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*Your first name..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Jean..'}))
     last_name = forms.CharField(
         max_length=30, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*Your last name..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Smith..'}))
     username = forms.EmailField(
         max_length=254, required=True,
         widget=forms.TextInput(attrs={'placeholder': '*Email..'}))
     password1 = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'placeholder': '*Password..', 'class': 'password'}))
+            attrs={'placeholder': '*Mot de passe..', 'class': 'password'}))
     password2 = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'placeholder': '*Confirm Password..', 'class': 'password'}))
+            attrs={'placeholder': '*Confirmer le mot de passe..',
+                   'class': 'password'}))
 
     class Meta:
         """Class behaviour.
@@ -45,7 +46,7 @@ class AuthForm(AuthenticationForm):
         widget=forms.TextInput(attrs={'placeholder': '*Email..'}))
     password = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'placeholder': '*Password..', 'class': 'password'}))
+            attrs={'placeholder': '*Mot de passe..', 'class': 'password'}))
 
     class Meta:
         """Class behaviour.
@@ -105,10 +106,11 @@ class ForgottenPasswordForm(SetPasswordForm):
     '''
     new_password1 = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'placeholder': '*Password..', 'class': 'password'}))
+            attrs={'placeholder': '*Mot de passe..', 'class': 'password'}))
     new_password2 = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'placeholder': '*Confirm Password..', 'class': 'password'}))
+            attrs={'placeholder': '*Confirmez votre mot de passe..',
+                   'class': 'password'}))
 
     class Meta:
         """Class behaviour.
