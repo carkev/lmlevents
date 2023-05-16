@@ -119,6 +119,7 @@ def sign_in(request):
 
     if is_ajax and request.method == "POST":
         auth_form = AuthForm(data=request.POST)
+
         if auth_form.is_valid():
             username = auth_form.cleaned_data.get('username')
             password = auth_form.cleaned_data.get('password')
@@ -244,11 +245,13 @@ def account(request):
             content_type="application/json")
 
     context = {}
+    # TODO add an owner to Coupon model and add it to the context to
+    # display it in the account template.
     # Passes 'verified' parameter to url to handle a success message
     verified = request.GET.get("verified", None)
 
-    query = Order.objects.filter(email=request.user.email)
-    context = {'invoices': query}
+    order_query = Order.objects.filter(email=request.user.email)
+    context = {'invoices': order_query}
 
     if verified:
         context["verified"] = "true"
@@ -416,18 +419,19 @@ def verification(request, uidb64, token):
 class UserNewsListView(LoginRequiredMixin, ListView):
     model = News
     template_name = 'users/news/list.html'
+
     def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.filter(owner__in=[self.request.user])
+        queryset = super().get_queryset()
+        return queryset.filter(owner__in=[self.request.user])
 
 
 class UserNewsDetailView(DetailView):
     model = News
     template_name = 'users/news/detail.html'
-    def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.filter(owner__in=[self.request.user])
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(owner__in=[self.request.user])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -435,8 +439,7 @@ class UserNewsDetailView(DetailView):
         news = self.get_object()
         if 'module_id' in self.kwargs:
             # get current module
-            context['module'] = news.modules.get(
-                                    id=self.kwargs['module_id'])
+            context['module'] = news.modules.get(id=self.kwargs['module_id'])
         else:
             # get first module
             context['module'] = news.modules.all()[0]

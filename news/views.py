@@ -1,3 +1,5 @@
+"""News view module.
+"""
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic.base import TemplateResponseMixin, View
 from django.views.generic.list import ListView
@@ -19,35 +21,48 @@ from .models import Module, Content, Subject
 
 
 class ManageNewsListView(ListView):
+    """Class view to manage CRUD news.
+    """
     model = News
     template_name = 'news/manage/news/list.html'
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.filter(owner=self.request.user)
+        queryset = super().get_queryset()
+        return queryset.filter(owner=self.request.user)
 
 
 class OwnerMixin:
+    """Mixin class to retrieve the owner news.
+    """
     def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.filter(owner=self.request.user)
+        """Get tje owner news.
+        """
+        queryset = super().get_queryset()
+        return queryset.filter(owner=self.request.user)
 
 
 class OwnerEditMixin:
+    """Mixin class to edit.
+    """
     def form_valid(self, form):
+        """Valid form only if the owner is the editor.
+        """
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
 
-class OwnerNewsMixin(OwnerMixin,
-                       LoginRequiredMixin,
-                       PermissionRequiredMixin):
+class OwnerNewsMixin(OwnerMixin, LoginRequiredMixin, PermissionRequiredMixin):
+    """Mixin class to get news.
+    """
     model = News
     fields = ['subject', 'title', 'slug', 'overview']
     success_url = reverse_lazy('manage_news_list')
 
 
 class OwnerNewsEditMixin(OwnerNewsMixin, OwnerEditMixin):
+    """Mixin class to get the edit form only if the editor is the
+    author.
+    """
     template_name = 'news/manage/news/form.html'
 
 

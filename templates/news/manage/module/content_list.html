@@ -2,66 +2,66 @@
 {% load news %}
 
 {% block title %}
-  Module {{ module.order|add:1 }}: {{ module.title }}
+  Article {{ module.order|add:1 }}: {{ module.title }}
 {% endblock %}
 
 {% block content %}
 {% with news=module.news %}
-  <h1>news "{{ news.title }}"</h1>
+  <h1>Actualité "{{ news.title }}"</h1>
   <div class="contents">
-    <h3>Modules</h3>
+    <h3>Article</h3>
     <ul id="modules">
       {% for m in news.modules.all %}
         <li data-id="{{ m.id }}" {% if m == module %}class="selected"{% endif %}>
           <a href="{% url 'news:module_content_list' m.id %}">
             <span>
-              Module <span class="order">{{ m.order|add:1 }}</span>
+              Article <span class="order">{{ m.order|add:1 }}</span>
             </span>
             <br>
             {{ m.title }}
           </a>
         </li>
       {% empty %}
-        <li>No modules yet.</li>
+        <li>Aucun article disponible pour le moment.</li>
       {% endfor %}
     </ul>
     <p><a href="{% url 'news:news_module_update' news.id %}">
-    Edit modules</a></p>
+     Modifier les articles</a></p>
   </div>
   <div class="module">
-    <h2>Module {{ module.order|add:1 }}: {{ module.title }}</h2>
-    <h3>Module contents:</h3>
+    <h2>Article {{ module.order|add:1 }}: {{ module.title }}</h2>
+    <h3>Contenu de l'article:</h3>
     <div id="module-contents">
       {% for content in module.contents.all %}
         <div data-id="{{ content.id }}">
           {% with item=content.item %}
             <p>{{ item }} ({{ item|model_name }})</p>
             <a href="{% url 'news:module_content_update' module.id item|model_name item.id %}">
-              Edit
+              Modifier
             </a>
             <form action="{% url 'news:module_content_delete' content.id %}" method="post">
-              <input type="submit" value="Delete">
+              <input type="submit" value="Supprimer">
               {% csrf_token %}
             </form>
             {% endwith %}
         </div>
       {% empty %}
-        <p>This module has no contents yet.</p>
+        <p>Cet article n'a pas encore de contenu.</p>
       {% endfor %}
     </div>
-    <h3>Add new content:</h3>
+    <h3>Ajouter un nouveau contenu:</h3>
     <ul class="content-types">
       <li>
-        <a href="{% url 'news:module_content_create' module.id 'text' %}">Text</a>
+        <a href="{% url 'news:module_content_create' module.id 'text' %}">Texte</a>
       </li>
       <li>
         <a href="{% url 'news:module_content_create' module.id 'image' %}">Image</a>
       </li>
       <li>
-        <a href="{% url 'news:module_content_create' module.id 'video' %}">Video</a>
+        <a href="{% url 'news:module_content_create' module.id 'video' %}">Vidéo</a>
       </li>
       <li>
-        <a href="{% url 'news:module_content_create' module.id 'file' %}">File</a>
+        <a href="{% url 'news:module_content_create' module.id 'file' %}">Fichier</a>
       </li>
     </ul>
   </div>

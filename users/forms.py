@@ -15,19 +15,20 @@ class UserForm(UserCreationForm):
     '''
     first_name = forms.CharField(
         max_length=30, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*Your first name..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Jean..'}))
     last_name = forms.CharField(
         max_length=30, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*Your last name..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Smith..'}))
     username = forms.EmailField(
         max_length=254, required=True,
         widget=forms.TextInput(attrs={'placeholder': '*Email..'}))
     password1 = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'placeholder': '*Password..', 'class': 'password'}))
+            attrs={'placeholder': '*Mot de passe..', 'class': 'password'}))
     password2 = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'placeholder': '*Confirm Password..', 'class': 'password'}))
+            attrs={'placeholder': '*Confirmer le mot de passe..',
+                   'class': 'password'}))
 
     class Meta:
         """Class behaviour.
@@ -45,7 +46,7 @@ class AuthForm(AuthenticationForm):
         widget=forms.TextInput(attrs={'placeholder': '*Email..'}))
     password = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'placeholder': '*Password..', 'class': 'password'}))
+            attrs={'placeholder': '*Mot de passe..', 'class': 'password'}))
 
     class Meta:
         """Class behaviour.
@@ -59,20 +60,20 @@ class UserProfileForm(forms.ModelForm):
     '''
     telephone = forms.CharField(
         max_length=15, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*Telephone..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Téléphone..'}))
     address = forms.CharField(
         max_length=100, required=True,
         widget=forms.TextInput(
-            attrs={'placeholder': '*First line of address..'}))
+            attrs={'placeholder': '*Adresse..'}))
     town = forms.CharField(
         max_length=100, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*Town or City..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Ville..'}))
     county = forms.CharField(
         max_length=100, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*County..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Région..'}))
     post_code = forms.CharField(
         max_length=8, required=True,
-        widget=forms.TextInput(attrs={'placeholder': '*Postal Code..'}))
+        widget=forms.TextInput(attrs={'placeholder': '*Code Postale..'}))
     country = forms.CharField(
         max_length=100, required=True,
         widget=forms.Select(attrs={"class": "selection"}, choices=COUNTRIES))
@@ -105,10 +106,11 @@ class ForgottenPasswordForm(SetPasswordForm):
     '''
     new_password1 = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'placeholder': '*Password..', 'class': 'password'}))
+            attrs={'placeholder': '*Mot de passe..', 'class': 'password'}))
     new_password2 = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'placeholder': '*Confirm Password..', 'class': 'password'}))
+            attrs={'placeholder': '*Confirmez votre mot de passe..',
+                   'class': 'password'}))
 
     class Meta:
         """Class behaviour.

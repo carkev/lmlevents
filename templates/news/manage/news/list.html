@@ -1,27 +1,27 @@
 {% extends "base.html" %}
 
-{% block title %}My news{% endblock %}
+{% block title %}Actualités{% endblock %}
 
 {% block content %}
-  <h1>My news</h1>
+  <h1>Actualités</h1>
   <div class="module">
     {% for news in object_list %}
       <div class="news-info">
         <h3>{{ news.title }}</h3>
         <p>
-          <a href="{% url 'news:news_edit' news.id %}">Edit</a> |
-          <a href="{% url 'news:news_delete' news.id %}">Delete</a> 
+          <a href="{% url 'news:news_edit' news.id %}">Modifier</a> |
+          <a href="{% url 'news:news_delete' news.id %}">Supprimer</a> 
           {% if news.modules.count > 0 %}
             | <a href="{% url 'news:module_content_list' news.modules.first.id %}">
-            Manage contents</a>
+            Gérer le contenu</a>
           {% endif %}
         </p>
       </div>
     {% empty %}
-      <p>You haven't created any news yet.</p>
+      <p>Aucune actualité n'est encore parue.</p>
     {% endfor %}
     <p>
-      <a href="{% url 'news:news_create' %}" class="button">Create new news</a>
+      <a href="{% url 'news:news_create' %}" class="button">Créer une actualité</a>
     </p>
   </div>
 {% endblock %}

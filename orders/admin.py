@@ -55,6 +55,7 @@ def order_payment(obj):
 
 order_payment.short_description = 'Stripe payment'
 
+
 def order_detail(obj):
     """Invoice detail.
     """

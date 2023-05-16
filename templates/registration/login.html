@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Log-in{% endblock %}
+{% block title %}Se connecter{% endblock %}
 
 {% block content %}
-  <h1>Log-in</h1>
+  <h1>Se connecter</h1>
   <div class="module">
     {% if form.errors %}
-      <p>Your username and password didn't match. Please try again.</p>
+      <p>Votre username et votre mot de passe ne correspondent pas. Réessayez.</p>
     {% else %}
-      <p>Please, use the following form to log-in:</p>
+      <p>Connectez-vous:</p>
     {% endif %}
     <div class="login-form">
       <form action="{% url 'login' %}" method="post">
         {{ form.as_p }}
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}" />
-        <p><input type="submit" value="Log-in"></p>
+        <p><input type="submit" value="Se connecter"></p>
       </form>
     </div>
   </div>

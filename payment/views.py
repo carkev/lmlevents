@@ -1,3 +1,5 @@
+"""Payment view module.
+"""
 from decimal import Decimal
 import stripe
 from django.conf import settings
@@ -65,8 +67,12 @@ def payment_process(request):
 
 
 def payment_completed(request):
+    """Payment completed view.
+    """
     return render(request, 'payment/payment_completed.html')
 
 
 def payment_canceled(request):
+    """Payment canceled view.
+    """
     return render(request, 'payment/payment_canceled.html')

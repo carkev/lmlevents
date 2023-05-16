@@ -2,15 +2,15 @@
 """
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 from shop.models import Product
 from shop.recommender import Recommender
 from coupons.forms import CouponApplyForm
-# from users.decorators import verification_required
 from .cart import Cart
 from .forms import CartAddProductForm
 
 
+@login_required
 @require_POST
 def cart_add(request, product_id):
     """Add product to cart.
@@ -28,6 +28,7 @@ def cart_add(request, product_id):
     return redirect('cart:cart_detail')
 
 
+@login_required
 @require_POST
 def cart_remove(request, product_id):
     """Remove item from cart.
@@ -38,8 +39,7 @@ def cart_remove(request, product_id):
     return redirect('cart:cart_detail')
 
 
-# @login_required
-# @verification_required
+@login_required
 def cart_detail(request):
     """Get items from cart.
     """
@@ -51,12 +51,12 @@ def cart_detail(request):
                             'override': True})
 
     coupon_apply_form = CouponApplyForm()
-    r = Recommender()
+    recommender = Recommender()
     cart_products = [item['product'] for item in cart]
 
     if cart_products:
-        recommended_products = r.suggest_products_for(cart_products,
-                                                      max_results=4)
+        recommended_products = recommender.suggest_products_for(cart_products,
+                                                                max_results=4)
     else:
         recommended_products = []
 

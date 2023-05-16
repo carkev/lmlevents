@@ -2,26 +2,26 @@
 
 {% block title %}
   {% if object %}
-    Edit news "{{ object.title }}"
+    Modifier "{{ object.title }}"
   {% else %}
-    Create a new news
+    Créer une activité
   {% endif %}
 {% endblock %}
 
 {% block content %}
   <h1>
     {% if object %}
-      Edit news "{{ object.title }}"
+      Modifier "{{ object.title }}"
     {% else %}
-      Create a new news
+      Créer une actualité
     {% endif %}
   </h1>
   <div class="module">
-    <h2>news info</h2>
+    <h2>Actualité</h2>
     <form method="post">
       {{ form.as_p }}
       {% csrf_token %}
-      <p><input type="submit" value="Save news"></p>
+      <p><input type="submit" value="Sauvegarder"></p>
     </form>
   </div>
 {% endblock %}

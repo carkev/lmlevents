@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Edit "{{ news.title }}"
+  Modifier "{{ news.title }}"
 {% endblock %}
 
 {% block content %}
-  <h1>Edit "{{ news.title }}"</h1>
+  <h1>Modifier "{{ news.title }}"</h1>
   <div class="module">
-    <h2>News modules</h2>
+    <h2>Nouvel article</h2>
     <form method="post">
       {{ formset }}
       {{ formset.management_form }}
       {% csrf_token %}
-      <input type="submit" value="Save modules">
+      <input type="submit" value="Sauvegarder">
     </form>
   </div>
 {% endblock %}

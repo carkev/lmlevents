@@ -461,3 +461,7 @@ padding-bottom: 15%;
 #main .item-block .item {
     width: 15vw;
 }
+
+#code-form {
+    margin-bottom: 10%;
+}

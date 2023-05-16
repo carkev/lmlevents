@@ -15,7 +15,7 @@ class Subject(models.Model):
         ordering = ['title']
 
     def __str__(self):
-        return self.title
+        return str(self.title)
 
 
 class News(models.Model):
@@ -36,13 +36,13 @@ class News(models.Model):
         ordering = ['-created']
 
     def __str__(self):
-        return self.title
+        return str(self.title)
 
 
 class Module(models.Model):
     news = models.ForeignKey(News,
-                               related_name='modules',
-                               on_delete=models.CASCADE)
+                             related_name='modules',
+                             on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     order = OrderField(blank=True, for_fields=['news'])
@@ -60,11 +60,11 @@ class Content(models.Model):
                                on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType,
                                      on_delete=models.CASCADE,
-                                     limit_choices_to={'model__in':(
-                                     'text',
-                                     'video',
-                                     'image',
-                                     'file')})
+                                     limit_choices_to={'model__in': (
+                                         'text',
+                                         'video',
+                                         'image',
+                                         'file')})
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
     order = OrderField(blank=True, for_fields=['module'])
@@ -85,17 +85,16 @@ class ItemBase(models.Model):
         abstract = True
 
     def __str__(self):
-        return self.title
-    
+        return str(self.title)
+
     def render(self):
         return render_to_string(
-        f'news/content/{self._meta.model_name}.html',
-        {'item': self})
+            f'news/content/{self._meta.model_name}.html',
+            {'item': self})
 
 
 class Text(ItemBase):
     content = HTMLField()
-    # content = models.TextField()
 
 
 class File(ItemBase):

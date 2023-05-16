@@ -5,6 +5,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from orders.models import Order
+from coupons.models import Coupon
 from .tasks import payment_completed
 
 
@@ -43,6 +44,16 @@ def stripe_webhook(request):
             # store Stripe payment ID
             order.stripe_id = session.payment_intent
             order.save()
+
+            # mark coupons as inactive
+            if order.coupon.code:
+                coupon = Coupon.objects.get(code=order.coupon.code)
+                # store Stripe payment ID
+                coupon.active = False
+                coupon.save()
+                coupon.delete()
+                request.session.cart = None
+
             # launch asynchronous task
             payment_completed.delay(order.id)
 

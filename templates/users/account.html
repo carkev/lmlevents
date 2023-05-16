@@ -29,7 +29,7 @@
     <thead>
       <tr>
         <th>Champ</th>
-        <th></th>
+        <th>Valeur</th>
       </tr>
     </thead>
     <tbody>
@@ -90,6 +90,7 @@
   </table>
 
   <br>
+  <h4>Historique des factures</h4>
 
   <table>
     <thead>
@@ -100,15 +101,50 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-
-        {% for invoice in invoices %}
-          <td>{{ invoice }}</td>
+      {% for invoice in invoices %}
+        <tr>
+          <td><a href="{% url 'orders:order_pdf' invoice.pk %}">{{ invoice }}</a></td>
           <td>{{ invoice.get_total_cost }}</td>
           {% if invoice.paid %}
             <td>Payée</td>
           {% else %}
-            <td>Non payée</td>
+            <td><a href="{% url 'orders:order_detail' invoice.pk %}">Impayée</a></td>
+          {% endif %}
+        </tr>
+      {% empty %}
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      {% endfor %}
+ 
+    </tbody>
+  </table>
+  {% comment %} <br />
+  <h4>Bons de réduction</h4> {% endcomment %}
+  {% comment %} <table>
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Réductions</th>
+        <th>Début de validité</th>
+        <th>Fin de validité</th>
+        <th>Etat</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+
+        {% for coupon in coupons %}
+          <td>{{ coupon }}</td>
+          <td>{{ coupon.discount }}</td>
+          <td>{{ coupon.valid_from }}</td>
+          <td>{{ coupon.valid_to }}</td>
+          {% if coupon.active %}
+            <td>Actif</td>
+          {% else %}
+            <td>Inactif</td>
           {% endif %}
         {% empty %}
           <td></td>
@@ -118,7 +154,7 @@
  
       </tr>
     </tbody>
-  </table>
+  </table> {% endcomment %}
 
 
 

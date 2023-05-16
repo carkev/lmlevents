@@ -1,3 +1,5 @@
+"""Celery settings module.
+"""
 import os
 from celery import Celery
 
