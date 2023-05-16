@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load cache %}
+
+{% block title %}
+  {{ object.title }}
+{% endblock %}
+
+{% block content %}
+  <h1>
+    {{ news.slug|capfirst }}
+  </h1>
+  <div class="contents">
+    <ul id="modules">
+      {% for m in object.modules.all %}
+        <li data-id="{{ m.id }}" {% if m == module %}class="selected"{% endif %}>
+          <a href="{% url 'news:module_content_list' m.id %}">
+            <span>
+              {{ m.title }}
+            </span>
+            <br>
+            {{ m.description }}
+          </a>
+        </li>
+      {% empty %}
+        <li>Aucune nouveauté n'a encore été ajouté.</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="module">
+    {% cache 600 module_contents module %}
+      {% for content in module.contents.all %}
+        {% with item=content.item %}
+          <h2>{{ item.title }}</h2>
+          {{ item }}
+          {{ item.render }}
+        {% endwith %}
+      {% endfor %}
+    {% endcache %}
+  </div>
+{% endblock %}

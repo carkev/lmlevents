@@ -1,0 +1,2 @@
+"""Package to manage coupons.
+"""

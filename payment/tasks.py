@@ -1,9 +1,11 @@
+"""Celery task from payment module.
+"""
 from io import BytesIO
 from celery import shared_task
 import weasyprint
+from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
-from django.conf import settings
 from orders.models import Order
 
 
@@ -15,21 +17,19 @@ def payment_completed(order_id):
     """
     order = Order.objects.get(id=order_id)
     # create invoice e-mail
-    subject = f'My Shop - Invoice no. {order.id}'
-    message = 'Please, find attached the invoice for your recent purchase.'
+    subject = f'LML Events - Facture n°. {order.id}'
+    message = 'Veuillez trouver ci-joint la facture de votre achat.'
     email = EmailMessage(subject,
                          message,
-                         'admin@myshop.com',
+                         settings.EMAIL_HOST_USER,
                          [order.email])
     # generate PDF
-    html = render_to_string('order_pdf.html', {'order': order})
+    html = render_to_string('order/order_pdf.html', {'order': order})
     out = BytesIO()
-    stylesheets=[weasyprint.CSS(settings.STATIC_ROOT / 'css/pdf.css')]
-    weasyprint.HTML(string=html).write_pdf(out,
-                                          stylesheets=stylesheets)
+    stylesheets = [
+        weasyprint.CSS(settings.STATICFILES_DIRS[0] / 'css/pdf.css')]
+    weasyprint.HTML(string=html).write_pdf(out, stylesheets=stylesheets)
     # attach PDF file
-    email.attach(f'order_{order.id}.pdf',
-                 out.getvalue(),
-                 'application/pdf')
+    email.attach(f'order_{order.id}.pdf', out.getvalue(), 'application/pdf')
     # send e-mail
     email.send()

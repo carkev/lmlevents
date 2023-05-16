@@ -14,22 +14,34 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from news.views import NewsListView
 
 
 urlpatterns = [
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
+    path('', include('users.urls', namespace='users')),
     path('cart/', include('cart.urls', namespace='cart')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('payment/', include('payment.urls', namespace='payment')),
-    path('', include('shop.urls', namespace='shop')),
+    path('tinymce/', include('tinymce.urls')),
+    path('blog/', include('news.urls', namespace='news')),
+    path('news-list/', NewsListView.as_view(), name='news_list'),
+    path('coupons/', include('coupons.urls', namespace='coupons')),
+    # path("cookies/", include("cookie_consent.urls")),
+    path('shop', include('shop.urls', namespace='shop')),
+    path('home/', include('pages.urls', namespace='pages')),
+    path('sitemap.xml', sitemap, name='sitemap-xml'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     import debug_toolbar
 
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
     urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]

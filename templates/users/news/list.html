@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Mes actualités{% endblock %}
+
+{% block content %}
+  <h1>Mes actualités</h1>
+  <div class="module">
+    {% for news in object_list %}
+      <div class="news-info">
+        <h3>{{ news.title }}</h3>
+        <p><a href="{% url 'users:user_news_detail' news.id %}">
+        Accès au contenu</a></p>
+      </div>
+    {% empty %}
+      <p>
+        Vous n'êtes pas connecté.
+        <a href="{% url 'users:news_list' %}">Parcourir les actualités</a>.
+      </p>
+    {% endfor %}
+  </div>
+{% endblock %}

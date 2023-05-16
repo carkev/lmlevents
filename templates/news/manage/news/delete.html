@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Supprimer l'actualité{% endblock %}
+
+{% block content %}
+  <h1>Supprimer l'actualité "{{ object.title }}"</h1>
+  <div class="module">
+    <form action="" method="post">
+      {% csrf_token %}
+      <p>Êtes-vous sûr de vouloir supprimer l'actualité "{{ object }}"?</p>
+      <input type="submit" value="Confirmer">
+    </form>
+  </div>
+{% endblock %}
