@@ -14,8 +14,8 @@
       <p>
         <a href="{% url 'news:news_list_subject' subject.slug %}">
         {{ subject.title }}</a>.
-        {{ object.modules.count }} articles.
-        Auteur: {{ object.owner.get_full_name }}
+        {{ object.modules.count }} article{{ object.modules.count|pluralize }}.
+        {% comment %} Auteur: {{ object.owner.get_full_name }} {% endcomment %}
       </p>
       {{ object.overview|linebreaks }}
     </div>
