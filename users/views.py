@@ -404,18 +404,6 @@ def verification(request, uidb64, token):
         return render(request, 'users/two_step_verification.html', context)
 
 
-# class UserEnrollNewsView(LoginRequiredMixin, FormView):
-#     news = None
-#     form_class = NewsEnrollForm
-#     def form_valid(self, form):
-#         self.news = form.cleaned_data['news']
-#         self.news.users.add(self.request.user)
-#         return super().form_valid(form)
-#     def get_success_url(self):
-#         return reverse_lazy('user_news_detail',
-#                             args=[self.news.id])
-
-
 class UserNewsListView(LoginRequiredMixin, ListView):
     model = News
     template_name = 'users/news/list.html'
@@ -426,6 +414,8 @@ class UserNewsListView(LoginRequiredMixin, ListView):
 
 
 class UserNewsDetailView(DetailView):
+    """User news detail view class.
+    """
     model = News
     template_name = 'users/news/detail.html'
 
