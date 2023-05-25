@@ -97,7 +97,7 @@ sqlparse==0.4.2
 stripe==4.0.2
 tenacity==8.2.1
 tinycss2==1.2.1
-tornado==6.2
+tornado==6.3.2
 transliterate==1.10.2
 twilio==7.16.4
 txaio==23.1.1
